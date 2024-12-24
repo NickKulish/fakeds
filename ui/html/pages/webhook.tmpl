@@ -1,0 +1,38 @@
+{{define "title"}}Webhook{{end}}
+
+{{define "main"}}
+<form action='/' method='POST'>
+  <div>
+    <label>Webhook Url:</label>
+    {{with .Form.FieldErrors.webhookUrl}}
+      <label class='error'>{{.}}</label>
+    {{end}}
+    <input type='text' name='webhookUrl' value='{{.Form.WebhookUrl}}'>
+  </div>
+  <div>
+    <label>Envelope Url:</label>
+    {{with .Form.FieldErrors.envelopeUrl}}
+      <label class='error'>{{.}}</label>
+    {{end}}
+    <input type='text' name='envelopeUrl' value='{{.Form.EnvelopeUrl}}'>
+  </div>
+
+  <div>
+    <label>Token:</label>
+    {{with .Form.FieldErrors.token}}
+      <label class='error'>{{.}}</label>
+    {{end}}
+    <textarea name='token'>{{.Form.Token}}</textarea>
+  </div>
+  <div>
+    <label>EnvelopeID:</label>
+    {{with .Form.FieldErrors.envelopeID}}
+      <label class='error'>{{.}}</label>
+    {{end}}
+    <input type='text' name='envelopeID' value='{{.Form.EnvelopeID}}'>
+  </div>
+  <div>
+    <input type='submit' value='Create'>
+  </div>
+</form>
+{{end}}

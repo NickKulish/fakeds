@@ -1,0 +1,21 @@
+{{define "base"}}
+<!doctype html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <title>{{template "title" .}}</title>
+    <!-- CSS -->
+    <link rel='stylesheet' href='/static/css/main.css'>
+  </head>
+  <body>
+    <header>
+      <h1>Webhook</h1>
+    </header>
+    <main>
+      {{template "main" .}}
+    </main>
+    <!-- JS -->
+    <script src='/static/js/main.js' type='text/javascript'></script>
+  </body>
+</html>
+{{end}}
