@@ -13,11 +13,11 @@ import (
 )
 
 type templateData struct {
-	Form    any
-	Request string
+	Form   any
+	Result string
 }
 
-func (app *Application) newTemplateData(_ *http.Request) templateData {
+func (app *Application) newTemplateData() templateData {
 	return templateData{}
 }
 

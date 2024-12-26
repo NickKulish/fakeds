@@ -1,6 +1,9 @@
 package main
 
-import "net/http"
+import (
+	"errors"
+	"net/http"
+)
 
 type Envelope struct {
 	EnvelopeID string `json:"docusign-envelope/envelope-id"`
@@ -25,6 +28,7 @@ type EnvelopeData struct {
 	Envelope     Envelope      `json:"docusign-envelope"`
 	Workflow     Workflow      `json:"workflow"`
 	Participants []Participant `json:"participants"`
+	Error        string        `json:"error"`
 }
 
 func (app *Application) getEnvelopeData(url, envelopeID, token string) (*EnvelopeData, error) {
@@ -41,8 +45,13 @@ func (app *Application) getEnvelopeData(url, envelopeID, token string) (*Envelop
 
 	var data EnvelopeData
 	err = app.readJSON(resp.Body, &data)
+	app.logger.Info("ENVELOPE DATA", "data", data)
 	if err != nil {
 		return nil, err
 	}
+	if data.Error != "" {
+		return nil, errors.New(data.Error)
+	}
+
 	return &data, nil
 }

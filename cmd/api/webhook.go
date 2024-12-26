@@ -98,31 +98,37 @@ type webhookCreateForm struct {
 }
 
 func (app *Application) webhookCreate(w http.ResponseWriter, r *http.Request) {
-	data := app.newTemplateData(r)
-	data.Form = webhookCreateForm{
+	templateData := app.newTemplateData()
+	templateData.Form = webhookCreateForm{
 		EnvelopeUrl: "http://192.168.1.101:8082/workflow/c/nkulish/docusign-envelope-info/",
 		WebhookUrl:  "https://2394-119-92-53-249.ngrok-free.app/docusign/c/nkulish/webhook",
 	}
 
-	app.render(w, r, http.StatusOK, "webhook.tmpl", data)
+	app.render(w, r, http.StatusOK, "webhook.tmpl", templateData)
 }
 
 func (app *Application) webhookCreatePost(w http.ResponseWriter, r *http.Request) {
 	var form webhookCreateForm
+	templateData := app.newTemplateData()
 
 	err := app.decodePostForm(r, &form)
 	if err != nil {
-		app.serverError(w, r, err)
+		templateData.Result = err.Error()
+		app.render(w, r, http.StatusOK, "webhook.tmpl", templateData)
 		return
 	}
 
+	templateData.Form = form
+
 	data, err := app.getEnvelopeData(form.EnvelopeUrl, form.EnvelopeID, form.Token)
 	if err != nil {
-		app.serverError(w, r, err)
+		templateData.Result = err.Error()
+		app.render(w, r, http.StatusOK, "webhook.tmpl", templateData)
 		return
 	}
 
 	code, err := app.sendWebhook(form.WebhookUrl, *data)
 
-	w.Write([]byte(strconv.Itoa(code)))
+	templateData.Result = strconv.Itoa(code)
+	app.render(w, r, http.StatusOK, "webhook.tmpl", templateData)
 }
